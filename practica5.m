@@ -13,7 +13,7 @@ tam2 = size(matEcu);
 xdd = zeros(tam,'uint8');
 for i = 1:tam(1)
    for j = 1:tam(2)
-        index = find(matEcu(1,:) == originalA(i,j));
+        index = find(matEcu(1,:) == a(i,j));
         xdd(i,j) = matEcu(3,index);
    end
 end
@@ -22,12 +22,18 @@ end
 %end
 
 figure(1)
-subplot(1,2,1)
-imshow(originalA)
+subplot(2,2,1)
+imshow(a)
 title('Imagen original')
-subplot(1,2,2)
+subplot(2,2,2)
 imshow(xdd)
 title('Imagen ecualizada')
+subplot(2,2,3)
+imhist(a)
+title('Histograma original')
+subplot(2,2,4)
+imhist(xdd)
+title('Histograma ecualizado')
 
 
 function ecualizacion = ecu(imagen,color)

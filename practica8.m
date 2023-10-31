@@ -1,6 +1,3 @@
-clc
-clear all
-close all
 warning off all
 
 a = imread("peppers.png");
@@ -8,13 +5,13 @@ a = rgb2gray(a);
 [alto,ancho] = size(a);
 imagenDCT = a;
 imagenDCT = dct2(imagenDCT);
-numBloquesFil = floor(alto/8)
-numBloquesCol = floor(ancho/8)
+numBloquesFil = floor(alto/8);
+numBloquesCol = floor(ancho/8);
 figure(1)
 imshow(imagenDCT)
 title('Imagen con transformada de coseno discreto')
 tamBloque = 8;
-bits = 4;
+bits = input('Ingrese el numero de bits a reducir: ');
 nomuestras = 2^bits;
 matrizOriginal = zeros(numBloquesFil,numBloquesCol);
 
@@ -43,7 +40,6 @@ for i = 1:numBloquesFil
 end
 
 var = 7;
-colMatO2 = var * numBloquesCol;
 
 %%Segundo predictor
 matrizOriginal2 = zeros(numBloquesFil,var * numBloquesCol);
@@ -118,15 +114,36 @@ for i = 1:numBloquesFil
     end
 end
 matFinal = idct2(matFinal);
-
-
+matfinal = uint8(matFinal);
 figure(2)
-subplot(2,2,1)
-imshow(matrizOriginal)
-subplot(2,2,2)
-imshow(matrizOriginal2)
-subplot(2,2,3)
+subplot(1,3,1)
+imshow(a)
+title('Imagen original')
+subplot(1,3,2)
+imshow(imagenDCT)
+title('Imagen DCT')
+subplot(1,3,3)
 imshow(uint8(matFinal))
+title('Imagen recuperada')
+
+sumaOriginales = 0;
+    for i = 1:alto
+        for j=1:ancho
+            sumaOriginales=sumaOriginales+(double(a(i,j)))^2;
+        end
+    end
+    suma3 = 0;
+    for i = 1:alto
+        for j=1:ancho
+            suma3=suma3+(double(a(i,j))-double(matFinal(i,j)))^2;
+        end
+    end
+    sn = 10*log10(sumaOriginales/suma3);
+    fprintf('Relacion señal ruido %d\n\n',sn)
+    SN = 10*log10((sum(double(a)).^2)/(sum(double(a) - double(matFinal)).^2));
+    x = sprintf("Valor de S / N: %f", SN);
+    disp(x);
+
 
 
 

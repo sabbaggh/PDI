@@ -3,11 +3,40 @@ clear all
 close all
 warning off all
 
-a = imread("lalo2.jpg");
-tam = size(a);
+a = imread("peppers.png");
 a = rgb2gray(a);
+[alto,ancho] = size(a);
+imagenDCT = a;
+imagenDCT = dct2(imagenDCT);
+numBloquesFil = floor(alto/8)
+numBloquesCol = floor(ancho/8)
+figure(1)
+imshow(imagenDCT)
+title('Imagen con transformada de coseno discreto')
+tamBloque = 8;
 
-nim = hacerimagenDCT(a);
+matrizOriginal = zeros(numBloquesFil,numBloquesCol);
+
+for i = 1:numBloquesFil
+    for j =1:numBloquesCol
+        bloque = imagenDCT((i-1)*tamBloque+1:(i)*tamBloque, (j-1)*tamBloque+1:(j)*tamBloque);
+        matrizOriginal(i,j) = bloque(1,1);
+    end
+end
+
+%nim = hacerimagenDCT(a);
+matrizPrediccion = zeros(numBloquesFil, numBloquesCol);
+matrizPrediccion(1:end,1) = matrizOriginal(1:end,1);
+matrizPrediccion(1,1:end) = matrizOriginal(1,1:end);
+figure(2)
+subplot(2,2,1)
+imshow(matrizOriginal)
+subplot(2,2,2)
+imshow(bloque)
+subplot(2,2,3)
+imshow(matrizPrediccion)
+
+
 
 function imagenDCT = hacerimagenDCT(imagen)
     [alto,ancho] = size(imagen);
